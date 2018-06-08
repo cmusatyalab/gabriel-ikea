@@ -28,7 +28,7 @@ RECOGNIZE_ONLY = False
 
 # Port for communication between proxy and task server
 #TASK_SERVER_IP = "128.2.213.185"
-TASK_SERVER_IP = "128.2.211.75"
+TASK_SERVER_IP = "127.0.0.1"
 TASK_SERVER_PORT = 2722
 
 # Configs for object detection

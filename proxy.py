@@ -72,7 +72,7 @@ def display_verbal_guidance(text):
     for line in lines:
         cv2.putText(img_display, line.strip(), (10, y_pos), cv2.FONT_HERSHEY_SIMPLEX, 0.5, [0, 255, 0])
         y_pos += 50
-    zc.check_and_display('text_guidance', img_display, display_list, resize_max = config.DISPLAY_MAX_PIXEL, wait_time = config.DISPLAY_WAIT_TIME)
+    #zc.check_and_display('text_guidance', img_display, display_list, resize_max = config.DISPLAY_MAX_PIXEL, wait_time = config.DISPLAY_WAIT_TIME)
 
 class IkeaProxy(gabriel.proxy.CognitiveProcessThread):
     def __init__(self, image_queue, output_queue, task_server_addr, engine_id, log_flag = True):
@@ -172,9 +172,9 @@ class IkeaProxy(gabriel.proxy.CognitiveProcessThread):
         ## preprocessing of input image
         img = zc.raw2cv_image(data)
         if header.get('holo_capture', None) is not None:
-            zc.check_and_display('holo', img, display_list, resize_max = config.DISPLAY_MAX_PIXEL, wait_time = config.DISPLAY_WAIT_TIME)
+            #zc.check_and_display('holo', img, display_list, resize_max = config.DISPLAY_MAX_PIXEL, wait_time = config.DISPLAY_WAIT_TIME)
             return json.dumps(result)
-        zc.check_and_display('input', img, display_list, resize_max = config.DISPLAY_MAX_PIXEL, wait_time = config.DISPLAY_WAIT_TIME)
+        #zc.check_and_display('input', img, display_list, resize_max = config.DISPLAY_MAX_PIXEL, wait_time = config.DISPLAY_WAIT_TIME)
 
         ## get object detection result
         # feed data to the task assistance app
@@ -189,7 +189,7 @@ class IkeaProxy(gabriel.proxy.CognitiveProcessThread):
         #objects = np.array([[10, 450, 100, 500, 0.9, 0]])
         if "object" in display_list:
             img_object = zc.vis_detections(img, objects, config.LABELS)
-            zc.check_and_display("object", img_object, display_list, resize_max = config.DISPLAY_MAX_PIXEL, wait_time = config.DISPLAY_WAIT_TIME)
+            #zc.check_and_display("object", img_object, display_list, resize_max = config.DISPLAY_MAX_PIXEL, wait_time = config.DISPLAY_WAIT_TIME)
         LOG.info("object detection result: %s" % objects)
 
         ## for measurement, when the sysmbolic representation has been got
