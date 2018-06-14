@@ -11,12 +11,21 @@ A cognitive assistant to aid in the assembly of an Ikea lamp. Click below for th
 [license]: LICENSE
 
 # Installation
-Running the application using Docker is advised. If you want to install from source, please see [Dockerfile](Dockerfile) for details.
+## Client
+An Android client is available on the Google PlayStore.
+
+<a href='https://play.google.com/store/apps/details?id=edu.cmu.cs.gabrielclient'><img height='125px' width='323px' alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a>
+
+Google Play and the Google Play logo are trademarks of Google LLC.
+
+##Server
+Running the server application using Docker is advised. If you want to install from source, please see [Dockerfile](Dockerfile) for details.
+
 
 # How to Run
 ## Client
-Run Gabriel's [legacy Android Client](https://github.com/cmusatyalab/gabriel/tree/master/client/legacy-android-client). You'll need Android Studio to compile and install the apk.
-Make sure to change IP address of GABRIEL_IP variable at src/edu/cmu/cs/gabriel/Const.java to point to your server.
+From the main activity one can add servers by name and IP/domain. Subtitles for audio feedback can also been toggled. This option is useful for devices that may not have integrated speakers(like ODG R-7).
+Pressing the 'Play' button next to a server will initiate a connection to the Gabriel server at that address.
 
 ## Server
 ### Container
