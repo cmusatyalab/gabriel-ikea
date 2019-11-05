@@ -1,71 +1,52 @@
-FROM cmusatyalab/gabriel
+FROM nvidia/cuda:10.1-cudnn7-devel-ubuntu18.04
 MAINTAINER Satyalab, satya-group@lists.andrew.cmu.edu
 
-WORKDIR /
-RUN git clone https://github.com/cmusatyalab/gabriel-ikea.git
+ARG DEBIAN_FRONTEND=noninteractive
 
-ENV FASTER_RCNN_ROOT /py-faster-rcnn
+RUN apt-get update \
+    && apt-get upgrade -y \
+    && apt-get install -y \
+    --no-install-recommends \
+    apt-utils
 
-# install py-faster-rcnn without cudnn
-#############################################
-# install py-faster-rcnn dependency
-RUN apt-get update && apt-get install -y \
+RUN apt-get install -y \
     build-essential \
-    git \
     libopencv-dev \
-    python-opencv \
-    python-dev \
+    python3 \
+    python3-dev \
+    python3-pip \
     libprotobuf-dev \
     libleveldb-dev \
     libsnappy-dev \
     libhdf5-serial-dev \
     libatlas-base-dev \
     protobuf-compiler \
-    wget
-
-RUN apt-get install -y --no-install-recommends libboost-all-dev
-RUN apt-get install -y apt-utils libgflags-dev libgoogle-glog-dev liblmdb-dev
+    libboost-all-dev \
+    libgflags-dev \
+    libgoogle-glog-dev \
+    liblmdb-dev
 
 # fix bug for hdf5 for Caffe. See https://github.com/NVIDIA/DIGITS/issues/156
 RUN cd /usr/lib/x86_64-linux-gnu && ln -s libhdf5_serial.so libhdf5.so && \
     ln -s libhdf5_serial_hl.so libhdf5_hl.so
 
-RUN wget -O /tmp/get-pip.py https://bootstrap.pypa.io/get-pip.py && \
-    python /tmp/get-pip.py && \
-    pip install -U pip setuptools
+RUN python3 -m pip install --upgrade pip
 
-# download py-faster-rcnn
-WORKDIR /
-RUN git clone --recursive  https://github.com/rbgirshick/py-faster-rcnn.git
+COPY . /gabriel-ikea
+
+WORKDIR /gabriel-ikea
+RUN python3 -m pip install -r requirements.txt
+
+ENV FASTER_RCNN_ROOT /gabriel-ikea/py-faster-rcnn
 
 # install python dependencies
-WORKDIR /py-faster-rcnn/caffe-fast-rcnn
-RUN pip install easydict && \
-    pip install cython && \
-    pip install -r python/requirements.txt
-# must be this version of numpy, or it will crash: https://github.com/rbgirshick/py-faster-rcnn/issues/480; no need for this anymore?
-RUN pip install -Iv numpy==1.11.1
-RUN pip install -U python-dateutil
+WORKDIR /gabriel-ikea/py-faster-rcnn/caffe-fast-rcnn/python
+RUN python3 -m pip install -r requirements.txt
 
 # compile py-faster-rcnn
-WORKDIR /py-faster-rcnn
+WORKDIR /gabriel-ikea/py-faster-rcnn
 RUN cd lib && \
     make -j$(nproc)
 RUN cd caffe-fast-rcnn && \
-    cp Makefile.config.example Makefile.config && \
-    sed -i 's%/usr/lib/python2.7/dist-packages/numpy/core/include%/usr/local/lib/python2.7/dist-packages/numpy/core/include%' Makefile.config && \
-    sed -i 's%INCLUDE_DIRS := $(PYTHON_INCLUDE) /usr/local/include%INCLUDE_DIRS := $(PYTHON_INCLUDE) /usr/local/include /usr/include/hdf5/serial/%' Makefile.config && \
-    sed -i 's%LIBRARY_DIRS := $(PYTHON_LIB) /usr/local/lib /usr/lib%LIBRARY_DIRS := $(PYTHON_LIB) /usr/local/lib /usr/lib /usr/lib/x86_64-linux-gnu/hdf5/serial/%' Makefile.config && \
-    sed -i 's%# WITH_PYTHON_LAYER := 1%WITH_PYTHON_LAYER := 1%' Makefile.config && \
-    cat Makefile.config && \
     make -j$(nproc) && \
     make -j$(nproc) pycaffe
-
-# download/extract model for ikea
-WORKDIR /gabriel-ikea/model
-RUN wget https://owncloud.cmusatyalab.org/owncloud/index.php/s/00HicjwH27mZpv8/download -O ikea_model.tar.gz
-RUN tar -xvzf ikea_model.tar.gz
-
-
-EXPOSE 7070 9098 9111
-CMD ["bash", "-c", "gabriel-control -n eth0 -l & sleep 5; gabriel-ucomm -s 127.0.0.1:8021 & sleep 5;  cd /gabriel-ikea && python ikea_server.py & sleep 5; cd /gabriel-ikea && python proxy.py -s 127.0.0.1:8021"]
