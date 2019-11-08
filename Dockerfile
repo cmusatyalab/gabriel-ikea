@@ -50,3 +50,11 @@ RUN cd lib && \
 RUN cd caffe-fast-rcnn && \
     make -j$(nproc) && \
     make -j$(nproc) pycaffe
+
+# download/extract model for ikea
+WORKDIR /gabriel-ikea/model
+RUN wget https://owncloud.cmusatyalab.org/owncloud/index.php/s/00HicjwH27mZpv8/download -O ikea_model.tar.gz
+RUN tar -xvzf ikea_model.tar.gz
+
+EXPOSE 9099
+ENTRYPOINT ["./main.py"]
