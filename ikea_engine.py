@@ -23,7 +23,7 @@ import numpy as np
 import logging
 from gabriel_server import cognitive_engine
 from gabriel_protocol import gabriel_pb2
-import ikea_pb2
+import task_pb2
 import instructions
 import sys
 import os
@@ -134,7 +134,7 @@ class IkeaEngine(cognitive_engine.Engine):
                 from_client.frame_id)
 
         engine_fields = cognitive_engine.unpack_engine_fields(
-            ikea_pb2.EngineFields, from_client)
+            task_pb2.EngineFields, from_client)
 
         img_array = np.asarray(bytearray(raw_data), dtype=np.int8)
         img = cv2.imdecode(img_array, -1)
