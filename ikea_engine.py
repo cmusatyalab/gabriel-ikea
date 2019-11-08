@@ -31,8 +31,6 @@ def reorder_objects(result):
 
 
 class IkeaEngine(cognitive_engine.Engine):
-    ENGINE_NAME = "ikea"
-
     def handle(self, from_client):
         if from_client.payload_type != gabriel_pb2.PayloadType.IMAGE:
             return cognitive_engine.wrong_input_format_error(
