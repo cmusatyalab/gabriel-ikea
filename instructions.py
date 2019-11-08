@@ -232,7 +232,9 @@ def _bulb_result(objects, object_counts, engine_fields):
     return _result_without_update(engine_fields)
 
 
-def get_instruction(state, objects, engine_fields):
+def get_instruction(engine_fields, objects):
+    state = engine_fields.ikea.state
+
     if state == task_pb2.Ikea.State.START:
         return _start_result(engine_fields)
 
