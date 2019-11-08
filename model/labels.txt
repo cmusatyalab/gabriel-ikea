@@ -1,9 +1,0 @@
-shadetop
-bulbtop
-buckle
-lamp
-pipe
-blackcircle
-base
-shade
-bulb
