@@ -103,7 +103,7 @@ def _nothing_result(objects, object_counts, engine_fields):
     if object_counts[1] == 0:
         engine_fields.ikea.state = task_pb2.Ikea.State.BASE
         return _create_result(
-                "images_feedback/pipe.PNG", "Screw the pipe on top of the base."
+                "images_feedback/pipe.PNG", "Screw the pipe on top of the base.",
                 engine_fields)
 
     return _base_result(engine_fields)

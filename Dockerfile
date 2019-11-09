@@ -24,7 +24,8 @@ RUN apt-get install -y \
     libboost-all-dev \
     libgflags-dev \
     libgoogle-glog-dev \
-    liblmdb-dev
+    liblmdb-dev \
+    wget
 
 # fix bug for hdf5 for Caffe. See https://github.com/NVIDIA/DIGITS/issues/156
 RUN cd /usr/lib/x86_64-linux-gnu && ln -s libhdf5_serial.so libhdf5.so && \
@@ -57,4 +58,5 @@ RUN wget https://owncloud.cmusatyalab.org/owncloud/index.php/s/00HicjwH27mZpv8/d
 RUN tar -xvzf ikea_model.tar.gz
 
 EXPOSE 9099
+WORKDIR /gabriel-ikea
 ENTRYPOINT ["./main.py"]

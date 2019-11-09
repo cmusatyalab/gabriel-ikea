@@ -90,7 +90,7 @@ class IkeaEngine(cognitive_engine.Engine):
         # Warmup on a dummy image
         img = 128 * np.ones((300, 500, 3), dtype=np.uint8)
         for i in range(2):
-            _, _= im_detect(net, img)
+            _, _= im_detect(self.net, img)
         logger.info("Caffe net has been initilized")
 
     def _detect_object(self, img):
