@@ -62,13 +62,13 @@ def reorder_objects(result):
     # build a mapping between faster-rcnn recognized object order to a
     # standard order
     object_mapping = [-1] * len(instructions.LABELS)
-    with open("labels.txt") as f:
+    with open(os.path.join('model', 'labels.txt')) as f:
         lines = f.readlines()
         for idx, line in enumerate(lines):
             line = line.strip()
             object_mapping[idx] = instructions.LABELS.index(line)
 
-    for i in xrange(result.shape[0]):
+    for i in range(result.shape[0]):
         result[i, -1] = object_mapping[int(result[i, -1] + 0.1)]
 
     return result
@@ -97,7 +97,7 @@ class IkeaEngine(cognitive_engine.Engine):
         scores, boxes = im_detect(self.net, img)
 
         result = None
-        for cls_idx in xrange(len(config.LABELS)):
+        for cls_idx in range(len(instructions.LABELS)):
             cls_idx += 1 # because we skipped background
             cls_boxes = boxes[:, 4 * cls_idx : 4 * (cls_idx + 1)]
             cls_scores = scores[:, cls_idx]
@@ -136,7 +136,7 @@ class IkeaEngine(cognitive_engine.Engine):
         engine_fields = cognitive_engine.unpack_engine_fields(
             instruction_pb2.EngineFields, from_client)
 
-        img_array = np.asarray(bytearray(raw_data), dtype=np.int8)
+        img_array = np.asarray(bytearray(from_client.payload), dtype=np.int8)
         img = cv2.imdecode(img_array, -1)
 
         if max(img.shape) > IMAGE_MAX_WH:

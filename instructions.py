@@ -19,13 +19,12 @@
 #   limitations under the License.
 #
 
-import cv2
 import instruction_pb2
 import time
 from gabriel_protocol import gabriel_pb2
 
 
-ENGINE_NAME = "ikea"
+ENGINE_NAME = "instruction"
 
 # The objects(states) which can be detected
 LABELS = ["base", "pipe", "shade", "shadetop", "buckle", "blackcircle", "lamp",
@@ -72,7 +71,8 @@ def _result_with_update(image_path, instruction, engine_fields):
     result = gabriel_pb2.ResultWrapper.Result()
     result.payload_type = gabriel_pb2.PayloadType.IMAGE
     result.engine_name = ENGINE_NAME
-    result.payload = cv2.imread(image_path)
+    with open(image_path, 'rb') as f:
+        result.payload = f.read()
     result_wrapper.results.append(result)
 
     result = gabriel_pb2.ResultWrapper.Result()
