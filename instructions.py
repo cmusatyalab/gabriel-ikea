@@ -20,7 +20,7 @@
 #
 
 import cv2
-import task_pb2
+import instruction_pb2
 import time
 from gabriel_protocol import gabriel_pb2
 
@@ -91,7 +91,7 @@ def _result_without_update(engine_fields):
 
 
 def _start_result(engine_fields):
-    engine_fields.ikea.state = task_pb2.Ikea.State.NOTHING
+    engine_fields.ikea.state = instruction_pb2.Ikea.State.NOTHING
     return _result_with_update(
         "images_feedback/base.PNG", "Put the base on the table.", engine_fields)
 
@@ -101,7 +101,7 @@ def _nothing_result(objects, object_counts, engine_fields):
         return _result_without_update(engine_fields)
 
     if object_counts[1] == 0:
-        engine_fields.ikea.state = task_pb2.Ikea.State.BASE
+        engine_fields.ikea.state = instruction_pb2.Ikea.State.BASE
         return _create_result(
                 "images_feedback/pipe.PNG", "Screw the pipe on top of the base.",
                 engine_fields)
@@ -135,7 +135,7 @@ def _base_result(objects, object_counts, engine_fields):
                 continue
             if pipe_height / base_height < 1.5:
                 continue
-            engine_fields.ikea.state = task_pb2.Ikea.State.PIPE
+            engine_fields.ikea.state = instruction_pb2.Ikea.State.PIPE
             return _result_with_update(
                 "images_feedback/shade.PNG", "Good job. Now find the shade "
                 "cover and expand it.", engine_fields)
@@ -145,7 +145,7 @@ def _base_result(objects, object_counts, engine_fields):
 
 def _pipe_result(objects, object_counts, engine_fields):
     if object_counts[2] > 0:
-        engine_fields.ikea.state = task_pb2.Ikea.State.SHADE
+        engine_fields.ikea.state = instruction_pb2.Ikea.State.SHADE
         return _result_with_update(
             "images_feedback/buckle.PNG", "Insert the iron wires to support "
             "the shade. Then show the top view of the shade.", engine_fields)
@@ -162,7 +162,7 @@ def _shade_result(objects, object_counts, engine_fields):
         engine_fields.ikea.frames_with_one_buckle = 0
         engine_fields.ikea.frames_with_two_buckles += 1
         if engine_fields.ikea.frames_with_two_buckles > 3:
-            engine_fields.ikea.state = task_pb2.Ikea.State.BUCKLE
+            engine_fields.ikea.state = instruction_pb2.Ikea.State.BUCKLE
             return _result_with_update(
                 "images_feedback/blackcircle.PNG", "Great. Now unscrew the "
                 "black ring out of the pipe, and put it on the table.",
@@ -181,7 +181,7 @@ def _shade_result(objects, object_counts, engine_fields):
 
 def _buckle_result(objects, object_counts, engine_fields):
     if object_counts[5] > 0:
-        engine_fields.ikea.state = task_pb2.Ikea.State.BLACK_CIRCLE
+        engine_fields.ikea.state = instruction_pb2.Ikea.State.BLACK_CIRCLE
         return _result_with_update(
             "images_feedback/lamp.PNG", "Now put the shade on top of the base, "
             "and screw the black ring back.", engine_fields)
@@ -191,7 +191,7 @@ def _buckle_result(objects, object_counts, engine_fields):
 
 def _black_circle_result(objects, object_counts, engine_fields):
     if object_counts[6] > 0:
-        engine_fields.ikea.state = task_pb2.Ikea.State.SHADE_BASE
+        engine_fields.ikea.state = instruction_pb2.Ikea.State.SHADE_BASE
         return _result_with_update(
             "images_feedback/bulb.PNG", "Find the bulb and put it on the "
             "table.", engine_fields)
@@ -201,7 +201,7 @@ def _black_circle_result(objects, object_counts, engine_fields):
 
 def _shade_base_result(objects, object_counts, engine_fields):
     if object_counts[7] > 0:
-        engine_fields.ikea.state = task_pb2.Ikea.State.BULB
+        engine_fields.ikea.state = instruction_pb2.Ikea.State.BULB
         return _result_with_update(
             "images_feedback/lamptop.PNG", "Good. Last step. Screw in the bulb "
             "and show me the top view.", engine_fields)
@@ -245,7 +245,7 @@ def _bulb_result(objects, object_counts, engine_fields):
                           shadetop_height * 0.25):
                 continue
 
-            engine_fields.ikea.state = task_pb2.Ikea.State.BULB_TOP
+            engine_fields.ikea.state = instruction_pb2.Ikea.State.BULB_TOP
             return _result_with_update(
                 "images_feedback/lamp.PNG", "Congratulations. You have "
                 "finished assembling the lamp.", engine_fields)
@@ -256,7 +256,7 @@ def _bulb_result(objects, object_counts, engine_fields):
 def get_instruction(engine_fields, objects):
     state = engine_fields.ikea.state
 
-    if state == task_pb2.Ikea.State.START:
+    if state == instruction_pb2.Ikea.State.START:
         return _start_result(engine_fields)
 
     if len(objects.shape) < 2:
@@ -265,19 +265,19 @@ def get_instruction(engine_fields, objects):
     # get the count of detected objects
     object_counts = [sum(objects[:, -1] == i) for i in range(len(LABELS))]
 
-    if state == task_pb2.Ikea.State.NOTHING:
+    if state == instruction_pb2.Ikea.State.NOTHING:
         return _nothing_result(objects, object_counts, engine_fields)
-    elif state == task_pb2.Ikea.State.BASE:
+    elif state == instruction_pb2.Ikea.State.BASE:
         return _base_result(objects, object_counts, engine_fields)
-    elif state == task_pb2.Ikea.State.PIPE:
+    elif state == instruction_pb2.Ikea.State.PIPE:
         return _pipe_result(objects, object_counts, engine_fields)
-    elif state == task_pb2.Ikea.State.SHADE:
+    elif state == instruction_pb2.Ikea.State.SHADE:
         return _shade_result(objects, object_counts, engine_fields)
-    elif state == task_pb2.Ikea.State.BUCKLE:
+    elif state == instruction_pb2.Ikea.State.BUCKLE:
         return _buckle_result(objects, object_counts, engine_fields)
-    elif state == task_pb2.Ikea.State.BLACK_CIRCLE:
+    elif state == instruction_pb2.Ikea.State.BLACK_CIRCLE:
         return _black_circle_result(objects, object_counts, engine_fields)
-    elif state == task_pb2.Ikea.State.SHADE_BASE:
+    elif state == instruction_pb2.Ikea.State.SHADE_BASE:
         return _shade_base_result(objects, object_counts, engine_fields)
-    elif state == task_pb2.Ikea.State.BULB:
+    elif state == instruction_pb2.Ikea.State.BULB:
         return _bulb_result(objects, object_counts, engine_fields)
