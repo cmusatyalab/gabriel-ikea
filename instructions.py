@@ -66,6 +66,7 @@ def _count_buckles(objects):
 
 
 def _result_with_update(image_path, instruction, engine_fields):
+    engine_fields.update_count += 1
     result_wrapper = _result_without_update(engine_fields)
 
     result = gabriel_pb2.ResultWrapper.Result()
@@ -92,6 +93,7 @@ def _result_without_update(engine_fields):
 
 def _start_result(engine_fields):
     engine_fields.ikea.state = instruction_pb2.Ikea.State.NOTHING
+    engine_fields.update_count += 1
     return _result_with_update(
         "images_feedback/base.PNG", "Put the base on the table.", engine_fields)
 
@@ -102,11 +104,11 @@ def _nothing_result(objects, object_counts, engine_fields):
 
     if object_counts[1] == 0:
         engine_fields.ikea.state = instruction_pb2.Ikea.State.BASE
-        return _create_result(
-                "images_feedback/pipe.PNG", "Screw the pipe on top of the base.",
-                engine_fields)
+        return _result_with_update(
+                "images_feedback/pipe.PNG", "Screw the pipe on top of the "
+                "base.", engine_fields)
 
-    return _base_result(engine_fields)
+    return _result_without_update(engine_fields)
 
 
 def _base_result(objects, object_counts, engine_fields):
@@ -157,10 +159,13 @@ def _shade_result(objects, object_counts, engine_fields):
     if object_counts[3] == 0 or object_counts[4] == 0:
         return _result_without_update(engine_fields)
 
+    update = False
     n_buckles = self._count_buckles(objects)
     if n_buckles == 2:
         engine_fields.ikea.frames_with_one_buckle = 0
         engine_fields.ikea.frames_with_two_buckles += 1
+        update = True
+
         if engine_fields.ikea.frames_with_two_buckles > 3:
             engine_fields.ikea.state = instruction_pb2.Ikea.State.BUCKLE
             return _result_with_update(
@@ -170,12 +175,16 @@ def _shade_result(objects, object_counts, engine_fields):
     if n_buckles == 1:
         engine_fields.ikea.frames_with_one_buckle += 1
         engine_fields.ikea.frames_with_two_buckles = 0
+        update = True
+
         if engine_fields.ikea.frames_with_one_buckle > 4:
             return _result_with_update(
                 "images_feedback/buckle.PNG", "You have inserted one wire. "
                 "Now insert the second wire to support the shade.",
                 engine_fields)
 
+    if update:
+        engine_fields.update_count += 1
     return _result_without_update(engine_fields)
 
 
