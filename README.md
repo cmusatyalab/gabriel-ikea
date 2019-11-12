@@ -12,11 +12,7 @@ A cognitive assistant to aid in the assembly of an Ikea lamp. Click below for th
 
 # Installation
 ## Client
-An Android client is available on the Google PlayStore.
-
-<a href='https://play.google.com/store/apps/details?id=edu.cmu.cs.gabrielclient'><img height='125px' width='323px' alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a>
-
-Google Play and the Google Play logo are trademarks of Google LLC.
+An Android client is available on [Google Play](https://play.google.com/store/apps/details?id=edu.cmu.cs.gabrielclient). The source code is available [here](https://github.com/cmusatyalab/gabriel/tree/new-gabriel/android-client).
 
 ## Server
 Running the server application using Docker is advised. If you want to install from source, please see [Dockerfile](Dockerfile) for details.
