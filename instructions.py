@@ -34,7 +34,7 @@ LABELS = ["base", "pipe", "shade", "shadetop", "buckle", "blackcircle", "lamp",
 def _count_buckles(objects):
     shadetops = []
     buckles = []
-    for i in xrange(objects.shape[0]):
+    for i in range(objects.shape[0]):
         if int(objects[i, -1] + 0.1) == 3:
             shadetops.append(objects[i, :])
         if int(objects[i, -1] + 0.1) == 4:
@@ -117,7 +117,7 @@ def _base_result(objects, object_counts, engine_fields):
 
     bases = []
     pipes = []
-    for i in xrange(objects.shape[0]):
+    for i in range(objects.shape[0]):
         if int(objects[i, -1] + 0.1) == 0:
             bases.append(objects[i, :])
         if int(objects[i, -1] + 0.1) == 1:
@@ -160,7 +160,7 @@ def _shade_result(objects, object_counts, engine_fields):
         return _result_without_update(engine_fields)
 
     update = False
-    n_buckles = self._count_buckles(objects)
+    n_buckles = _count_buckles(objects)
     if n_buckles == 2:
         engine_fields.ikea.frames_with_one_buckle = 0
         engine_fields.ikea.frames_with_two_buckles += 1
@@ -177,7 +177,9 @@ def _shade_result(objects, object_counts, engine_fields):
         engine_fields.ikea.frames_with_two_buckles = 0
         update = True
 
-        if engine_fields.ikea.frames_with_one_buckle > 4:
+        # We only give this instruction when frames_with_one_buckle is
+        # exactly 5 so it does not get repeated
+        if engine_fields.ikea.frames_with_one_buckle == 5:
             return _result_with_update(
                 "images_feedback/buckle.PNG", "You have inserted one wire. "
                 "Now insert the second wire to support the shade.",
@@ -223,7 +225,7 @@ def _bulb_result(objects, object_counts, engine_fields):
 
     shadetops = []
     bulbtops = []
-    for i in xrange(objects.shape[0]):
+    for i in range(objects.shape[0]):
         if int(objects[i, -1] + 0.1) == 3:
             shadetops.append(objects[i, :])
         if int(objects[i, -1] + 0.1) == 8:
@@ -290,3 +292,7 @@ def get_instruction(engine_fields, objects):
         return _shade_base_result(objects, object_counts, engine_fields)
     elif state == instruction_pb2.Ikea.State.BULB:
         return _bulb_result(objects, object_counts, engine_fields)
+    elif state == instruction_pb2.Ikea.State.BULB_TOP:
+        return _result_without_update(engine_fields)
+
+    raise Exception("Invalid state")
