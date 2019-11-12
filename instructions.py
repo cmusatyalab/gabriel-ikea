@@ -20,7 +20,6 @@
 #
 
 import instruction_pb2
-import time
 from gabriel_protocol import gabriel_pb2
 
 
