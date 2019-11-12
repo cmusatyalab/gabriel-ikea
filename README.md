@@ -18,7 +18,7 @@ An Android client is available on the Google PlayStore.
 
 Google Play and the Google Play logo are trademarks of Google LLC.
 
-##Server
+## Server
 Running the server application using Docker is advised. If you want to install from source, please see [Dockerfile](Dockerfile) for details.
 
 
@@ -30,11 +30,8 @@ Pressing the 'Play' button next to a server will initiate a connection to the Ga
 ## Server
 ### Container
 ```bash
-nvidia-docker run --rm -it --name ikea \
--p 0.0.0.0:9098:9098 -p 0.0.0.0:9111:9111 -p 0.0.0.0:22222:22222 \
--p 0.0.0.0:8080:8080 \
-cmusatyalab/gabriel-ikea:latest
+docker run --rm -it --gpus all -p 9099:9099 cmusatyalab/gabriel-ikea:latest
 ```
 
-# Test the trained DNN Object Detector Only
-Please see [img.py](img.py). The model can be downloaded from [here](https://owncloud.cmusatyalab.org/owncloud/index.php/s/00HicjwH27mZpv8/download).
+# Run the trained DNN Object Detector Only
+Please see [test.py](test.py). The model can be downloaded from [here](https://owncloud.cmusatyalab.org/owncloud/index.php/s/00HicjwH27mZpv8/download).
