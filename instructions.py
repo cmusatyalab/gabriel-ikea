@@ -92,7 +92,6 @@ def _result_without_update(engine_fields):
 
 def _start_result(engine_fields):
     engine_fields.ikea.state = instruction_pb2.Ikea.State.NOTHING
-    engine_fields.update_count += 1
     return _result_with_update(
         "images_feedback/base.PNG", "Put the base on the table.", engine_fields)
 
