@@ -20,7 +20,7 @@ Running the server application using Docker is advised. If you want to install f
 
 # How to Run
 ## Client
-From the main activity one can add servers by name and IP/domain. Subtitles for audio feedback can also been toggled. This option is useful for devices that may not have integrated speakers(like ODG R-7).
+From the main activity one can add servers by name and IP/domain. Subtitles for audio feedback can also been toggled. This option is useful for devices that may not have integrated speakers (like ODG R-7).
 Pressing the 'Play' button next to a server will initiate a connection to the Gabriel server at that address.
 
 ## Server
