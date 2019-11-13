@@ -39,17 +39,14 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "-t", "--tokens", type=int, default=DEFAULT_NUM_TOKENS,
-        help="number of tokens"
-    )
+        help="number of tokens")
     parser.add_argument(
         "-c",
         "--cpu-only",
         action="store_true",
-        help="Pass this flag to prevent the GPU from being used.",
-    )
+        help="Pass this flag to prevent the GPU from being used.")
     parser.add_argument(
-        "-p", "--port", type=int, default=DEFAULT_PORT, help="Set port number"
-    )
+        "-p", "--port", type=int, default=DEFAULT_PORT, help="Set port number")
     args = parser.parse_args()
 
     def engine_setup():

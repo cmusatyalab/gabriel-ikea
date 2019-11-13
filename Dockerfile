@@ -3,7 +3,7 @@ MAINTAINER Satyalab, satya-group@lists.andrew.cmu.edu
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update \
+RUN apt-get update --fix-missing \
     && apt-get upgrade -y \
     && apt-get install -y \
     --no-install-recommends \
