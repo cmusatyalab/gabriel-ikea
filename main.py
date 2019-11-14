@@ -32,8 +32,6 @@ INPUT_QUEUE_MAX_SIZE = 60
 
 logging.basicConfig(level=logging.INFO)
 
-logger = logging.getLogger(__name__)
-
 
 def main():
     parser = argparse.ArgumentParser()

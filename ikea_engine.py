@@ -140,6 +140,8 @@ class IkeaEngine(cognitive_engine.Engine):
         img = cv2.imdecode(img_array, -1)
 
         if max(img.shape) > IMAGE_MAX_WH:
+            resize_ratio = float(IMAGE_MAX_WH) / max(img.shape[0], img.shape[1])
+
             img = cv2.resize(img, (0, 0), fx=resize_ratio, fy=resize_ratio,
                              interpolation=cv2.INTER_AREA)
             objects = self._detect_object(img)
