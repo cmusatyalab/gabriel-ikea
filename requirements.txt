@@ -1,0 +1,7 @@
+psutil==5.6.4
+setuptools
+opencv-python==4.1.1.*
+matplotlib==3.1.1
+easydict==1.9
+Cython==0.29.14
+gabriel-server==0.1.0

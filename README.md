@@ -12,29 +12,22 @@ A cognitive assistant to aid in the assembly of an Ikea lamp. Click below for th
 
 # Installation
 ## Client
-An Android client is available on the Google PlayStore.
+An Android client is available on [Google Play](https://play.google.com/store/apps/details?id=edu.cmu.cs.gabrielclient). The source code is available [here](https://github.com/cmusatyalab/gabriel/tree/new-gabriel/android-client).
 
-<a href='https://play.google.com/store/apps/details?id=edu.cmu.cs.gabrielclient'><img height='125px' width='323px' alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a>
-
-Google Play and the Google Play logo are trademarks of Google LLC.
-
-##Server
+## Server
 Running the server application using Docker is advised. If you want to install from source, please see [Dockerfile](Dockerfile) for details.
 
 
 # How to Run
 ## Client
-From the main activity one can add servers by name and IP/domain. Subtitles for audio feedback can also been toggled. This option is useful for devices that may not have integrated speakers(like ODG R-7).
+From the main activity one can add servers by name and IP/domain. Subtitles for audio feedback can also been toggled. This option is useful for devices that may not have integrated speakers (like ODG R-7).
 Pressing the 'Play' button next to a server will initiate a connection to the Gabriel server at that address.
 
 ## Server
 ### Container
 ```bash
-nvidia-docker run --rm -it --name ikea \
--p 0.0.0.0:9098:9098 -p 0.0.0.0:9111:9111 -p 0.0.0.0:22222:22222 \
--p 0.0.0.0:8080:8080 \
-cmusatyalab/gabriel-ikea:latest
+docker run --rm -it --gpus all -p 9099:9099 cmusatyalab/gabriel-ikea:latest
 ```
 
-# Test the trained DNN Object Detector Only
-Please see [img.py](img.py). The model can be downloaded from [here](https://owncloud.cmusatyalab.org/owncloud/index.php/s/00HicjwH27mZpv8/download).
+# Run the trained DNN Object Detector Only
+Please see [test.py](test.py). The model can be downloaded from [here](https://owncloud.cmusatyalab.org/owncloud/index.php/s/00HicjwH27mZpv8/download).
