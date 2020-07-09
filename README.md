@@ -1,5 +1,4 @@
-# Overview [![Docker Image Status][docker-image]][docker]
-[![License][license-image]][license]
+# Overview [![Docker Image Status][docker-image]][docker] [![License][license-image]][license]
 
 A cognitive assistant to help assemble an Ikea lamp. Watch a demo video
 [here](https://www.youtube.com/watch?v=qDPuvBWNIUs). This assistant requires
