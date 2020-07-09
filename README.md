@@ -5,7 +5,7 @@ A cognitive assistant to help assemble
 Ikea lamp. Watch a demo video
 [here](https://www.youtube.com/watch?v=qDPuvBWNIUs). If you do not have the
 correct lamp, you can test the assistant using
-[these](https://docs.google.com/document/d/1iJXZDOzd6BLsI_0_IQXCHqgezkNBmTOY_2WlOos0L7o)
+[these](https://docs.google.com/document/d/e/2PACX-1vTFamw49F4BpHOQEf__gJBMZZY1qIuJPN3RP77KdHEZJ8LQ4xxD_E8u4DcF5DHvJjrALy6VPlDIPc9q/pub)
 images.
 
 [docker-image]: https://img.shields.io/docker/build/cmusatyalab/gabriel-ikea.svg
