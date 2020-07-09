@@ -1,9 +1,10 @@
 # Overview [![Docker Image Status][docker-image]][docker] [![License][license-image]][license]
 
-A cognitive assistant to help assemble an Ikea lamp. Watch a demo video
-[here](https://www.youtube.com/watch?v=qDPuvBWNIUs). This assistant requires
+A cognitive assistant to help assemble
 [this](https://www.amazon.com/Ikea-502-422-47-Magnarp-Table-Natural/dp/B00R3LSFII)
-lamp. If you don't have this lamp, you can test the assistant using
+Ikea lamp. Watch a demo video
+[here](https://www.youtube.com/watch?v=qDPuvBWNIUs). If you do not have the
+correct lamp, you can test the assistant using
 [these](https://docs.google.com/document/d/1iJXZDOzd6BLsI_0_IQXCHqgezkNBmTOY_2WlOos0L7o)
 images.
 
