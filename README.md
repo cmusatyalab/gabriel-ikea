@@ -1,7 +1,7 @@
 # Overview [![Docker Image Status][docker-image]][docker] [![License][license-image]][license]
 
 A cognitive assistant to help assemble
-[this](https://www.amazon.com/Ikea-502-422-47-Magnarp-Table-Natural/dp/B00R3LSFII)
+[this](https://web.archive.org/web/20170616133528/https://www.amazon.com/Ikea-502-422-47-Magnarp-Table-Natural/dp/B00R3LSFII)
 Ikea lamp. Watch a demo video
 [here](https://www.youtube.com/watch?v=qDPuvBWNIUs). If you do not have the
 correct lamp, you can test the assistant using
