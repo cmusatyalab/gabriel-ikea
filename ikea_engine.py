@@ -126,9 +126,6 @@ class IkeaEngine(cognitive_engine.Engine):
         else:
             dets_for_class = self._detect_object(img)
 
-        objects = reorder_objects(objects)
-
-        logger.info("object detection result: %s", objects)
         result_wrapper = instructions.get_instruction(
             engine_fields, dets_for_class)
         result_wrapper.frame_id = from_client.frame_id

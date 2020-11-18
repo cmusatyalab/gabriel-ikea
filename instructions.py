@@ -18,6 +18,7 @@
 #   limitations under the License.
 #
 
+import os
 import instruction_pb2
 from gabriel_protocol import gabriel_pb2
 
@@ -51,11 +52,11 @@ IMAGE_FILENAMES = {
     BASE: 'base.PNG',
     PIPE: 'pipe.PNG',
     SHADE: 'shade.PNG',
-    SHADETOP: 'buckle.png',
-    BUCKLE: 'buckle.png',
-    BLACKCIRCLE: 'blackcircle.png',
+    SHADETOP: 'buckle.PNG',
+    BUCKLE: 'buckle.PNG',
+    BLACKCIRCLE: 'blackcircle.PNG',
     LAMP: 'lamp.PNG',
-    BULB: 'bulb.png',
+    BULB: 'bulb.PNG',
     BULBTOP: 'lamptop.PNG',
     DONE: 'lamp.PNG',
 }
@@ -67,7 +68,7 @@ INSTRUCTIONS = {
     SHADETOP: 'Insert the iron wires to support the shade. Then show the top '
             'view of the shade',
     BUCKLE: 'You have inserted one wire. Now insert the second wire to '
-              'support the shade.'
+              'support the shade.',
     BLACKCIRCLE: 'Great. Now unscrew the black ring out of the pipe, and put '
                  'it on the table.',
     LAMP: 'Now put the shade on top of the base, and screw the black ring'
@@ -79,7 +80,7 @@ INSTRUCTIONS = {
 
 IMAGES = {
     cls_idx: open(os.path.join('images_feedback', filename), 'rb').read()
-    for cls_idx, filename in IMAGE_FILENAMES
+    for cls_idx, filename in IMAGE_FILENAMES.items()
 }
 
 
