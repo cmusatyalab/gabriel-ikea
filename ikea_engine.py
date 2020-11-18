@@ -31,7 +31,7 @@ import cv2
 
 faster_rcnn_root = os.getenv('FASTER_RCNN_ROOT', '.')
 sys.path.append(os.path.join(faster_rcnn_root, "tools"))
-import _init_paths # this is necessary
+import _init_paths  # this is necessary
 from fast_rcnn.config import cfg as faster_rcnn_config
 from fast_rcnn.test import im_detect
 from fast_rcnn.nms_wrapper import nms
@@ -48,6 +48,8 @@ IMAGE_MAX_WH = 640
 CONF_THRESH = 0.5
 NMS_THRESH = 0.3
 
+CLASS_IDX_LIMIT = instructions.BULB + 1  # Bulb has the highest index
+
 
 if not os.path.isfile(CAFFEMODEL):
     raise IOError(('{:s} not found.').format(CAFFEMODEL))
@@ -56,22 +58,6 @@ if not os.path.isfile(CAFFEMODEL):
 faster_rcnn_config.TEST.HAS_RPN = True  # Use RPN for proposals
 
 logger = logging.getLogger(__name__)
-
-
-def reorder_objects(result):
-    # build a mapping between faster-rcnn recognized object order to a
-    # standard order
-    object_mapping = [-1] * len(instructions.LABELS)
-    with open(os.path.join('model', 'labels.txt')) as f:
-        lines = f.readlines()
-        for idx, line in enumerate(lines):
-            line = line.strip()
-            object_mapping[idx] = instructions.LABELS.index(line)
-
-    for i in range(result.shape[0]):
-        result[i, -1] = object_mapping[int(result[i, -1] + 0.1)]
-
-    return result
 
 
 class IkeaEngine(cognitive_engine.Engine):
@@ -96,9 +82,9 @@ class IkeaEngine(cognitive_engine.Engine):
     def _detect_object(self, img):
         scores, boxes = im_detect(self.net, img)
 
-        result = None
-        for cls_idx in range(len(instructions.LABELS)):
-            cls_idx += 1 # because we skipped background
+        dets_for_class = {}
+        # Start from 1 because 0 is the background
+        for cls_idx in range(1, CLASS_IDX_LIMIT):
             cls_boxes = boxes[:, 4 * cls_idx : 4 * (cls_idx + 1)]
             cls_scores = scores[:, cls_idx]
 
@@ -111,22 +97,11 @@ class IkeaEngine(cognitive_engine.Engine):
             keep = nms(dets, NMS_THRESH)
             dets = dets[keep, :]
 
-            # filter out low confidence scores
-            inds = np.where(dets[:, -1] >= CONF_THRESH)[0]
-            dets = dets[inds, :]
+            dets_for_class[cls_idx] = [
+                det for det in dets if det[-1] >= CONF_THRESH
+            ]
 
-            # now change dets format to [x1, y1, x2, y2, confidence, cls_idx]
-            dets = np.hstack(
-                (dets, np.ones((dets.shape[0], 1)) * (cls_idx - 1)))
-
-            # combine with previous results (for other classes)
-            if result is None:
-                result = dets
-            else:
-                result = np.vstack((result, dets))
-
-        return result
-
+        return dets_for_class
 
     def handle(self, from_client):
         if from_client.payload_type != gabriel_pb2.PayloadType.IMAGE:
@@ -144,16 +119,18 @@ class IkeaEngine(cognitive_engine.Engine):
 
             img = cv2.resize(img, (0, 0), fx=resize_ratio, fy=resize_ratio,
                              interpolation=cv2.INTER_AREA)
-            objects = self._detect_object(img)
-            if objects is not None:
-                objects[:, :4] /= resize_ratio
+            dets_for_class = self._detect_object(img)
+            for class_idx in dets_for_class:
+                for i in range(len(dets_for_class[class_idx])):
+                    dets_for_class[class_idx][i][:4] /= resize_ratio
         else:
-            objects = self._detect_object(img)
+            dets_for_class = self._detect_object(img)
 
         objects = reorder_objects(objects)
 
         logger.info("object detection result: %s", objects)
-        result_wrapper = instructions.get_instruction(engine_fields, objects)
+        result_wrapper = instructions.get_instruction(
+            engine_fields, dets_for_class)
         result_wrapper.frame_id = from_client.frame_id
         result_wrapper.status = gabriel_pb2.ResultWrapper.Status.SUCCESS
 
