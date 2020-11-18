@@ -45,8 +45,7 @@ BASE = 7
 SHADE = 8
 BULB = 9
 
-# The DNN will output the following classes
-DONE = 10
+DONE = 10  # This is not a class the DNN will use.
 
 IMAGE_FILENAMES = {
     BASE: 'base.PNG',
